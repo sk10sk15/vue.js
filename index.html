@@ -11,6 +11,7 @@
 
     <div id="app">
         <p>{{message}}</p>
+        <button v-on:click="reverseMessage">メッセージを反転します</button>
       </div>
 
       <script>
@@ -18,6 +19,11 @@
               el:'#app',
               data:{
                   message: 'hello world'
+                },
+              method: {
+                    reverseMessage: function(){
+                        this.message = this.message.split('').reverse().join('')
+                    }
                 }
             })
       </script>
