@@ -5,35 +5,86 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-    <title>Document</title>
+    <title>Vue.jsでタイピングゲーム</title>
     <link rel="stylesheet" href="style.css">
     
 </head>
 <body>
-    <div class="container">
+    <div id="app" class="container">
         <div class="title">
             <h1>Typing Game</h1>
             <div class="marker"></div>
         </div>
+        <button v-if="startFlg!=true" class="startButton mb-20"　@click="gameStart">START</button>
+        <!-- @clickでgameStartメソッドと連携。starFlgがtrueでなければボタンが表示される -->
+        <div v-if="startFlg">
+            <div class="question mb-20">{{current_question}}</div>
+            <div v-if="current_question_counts == question_counts" class="clear">Clear!</div> <!--問題数と正解数が一致したら表示-->
+            <div class="typeFormWrapper mb-20">
+                <input id="typeForm" v-model="typeBox" type="text" class="typeForm">
+            </div>
+            <div class="gaugeWrapper mb-20">
+                <div v-bind:style="styleObject" class="gauge"></div>
+            </div>
+        
+            <div>{{current_question_counts}}/{{question_counts}}</div>
+        </div>
     </div>
 
-    <div id="app">
-        <p>{{message}}</p>
-        <button v-on:click="reverseM">メッセージを反転します</button>
-    </div>
-    
-      <script>
-          var vm = new Vue({
-              el:'#app',
-              data:{
-                  message: 'hello world'
-                },
-              methods: {
-                    reverseM: function(){
-                        vm.message = vm.message.split('').reverse().join('')
+    <script>
+        new Vue({
+            el:"#app",
+            data:{
+                startFlg:"", //Startボタンが押されたら反応する
+                current_question:"", //今現在の問題
+                questions:[
+                    'apple',
+                    'banana',
+                    'chocolate',
+                    'danut',
+                    'espresso',
+                ], //問題の配列
+                typeBox:"",
+                current_question_counts:0,
+                question_counts:0
+            },
+            computed:{
+                styleObject:function(){
+                    width = 20 * this.current_question_counts + "%" //5問しかないから20にしてある
+                    if(this.current_question_counts == 5){
+                        color = "#03a9f4"
+                    } else {
+                        color = "orange"
+                    }
+                    return { //返し方こうなっている
+                        'width':width,
+                        'background-color':color
                     }
                 }
-            })
-      </script>
+            },
+            methods:{
+                gameStart:function(){  //gameStartメソッド内でstartFlgを変更する
+                    this.startFlg = true; //Startボタンが押されるとtrueになる
+                    this.$nextTick(function(){ //Start後、カーソルがボックス内に行く
+                        document.getElementById('typeForm').focus()
+                    })
+                }
+            },
+            mounted: function(){
+                this.current_question = this.questions[0]
+                this.question_counts = this.questions.length //一番最初に、配列の数を代入しておく
+            },
+            watch:{
+                typeBox:function(e){ //typeboxの値が変わるたびにfunctionが動く alert('test')で確認できる
+                    if(e == this.current_question){
+                        this.questions.splice(0,1) //<配列>.splice(<始まりのインデックス>, <削除する要素数>)
+                        this.current_question = this.questions[0]
+                        this.typeBox = ""
+                        this.current_question_counts = this.current_question_counts + 1
+                    }
+                }
+            }
+        })
+    </script>
 </body>
 </html>
