@@ -4,25 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <div class="container">
+        <div class="title">
+            <h1>Typing Game</h1>
+            <div class="marker"></div>
+        </div>
+    </div>
 
     <div id="app">
         <p>{{message}}</p>
-        <button v-on:click="reverseMessage">メッセージを反転します</button>
-      </div>
-
+        <button v-on:click="reverseM">メッセージを反転します</button>
+    </div>
+    
       <script>
-          new Vue({
+          var vm = new Vue({
               el:'#app',
               data:{
                   message: 'hello world'
                 },
-              method: {
-                    reverseMessage: function(){
-                        this.message = this.message.split('').reverse().join('')
+              methods: {
+                    reverseM: function(){
+                        vm.message = vm.message.split('').reverse().join('')
                     }
                 }
             })
